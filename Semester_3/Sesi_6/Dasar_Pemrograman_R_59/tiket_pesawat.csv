@@ -1,0 +1,5 @@
+ID_Transaksi;Maskapai;Rute;Jumlah_Tiket;Harga_Tiket
+1;Garuda;Jakarta-Bali;20; Rp1.500.000 
+2;Lion Air;Jakarta-Surabaya;15; Rp900.000 
+3;AirAsia;Jakarta-Medan;10; Rp1.200.000 
+4;Citilink;Jakarta- Lombok;8; Rp1.100.000 
