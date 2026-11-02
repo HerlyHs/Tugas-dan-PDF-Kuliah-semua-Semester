@@ -19,6 +19,9 @@
     const owner = "HerlyHs";
     const repo = "Tugas-dan-PDF-Kuliah-semua-Semester";
     
+    // Daftar file sistem yang disembunyikan dari tampilan web
+    const ignoredFiles = ['.gitignore', 'index.html', 'style.css', 'README.md'];
+    
     async function loadRepoContents(path = "") {
         const url = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
         const listEl = document.getElementById("folder-list");
@@ -26,7 +29,7 @@
         try {
             listEl.innerHTML = "<li><a href='#'><span>⏳ Memuat data...</span></a></li>";
             const response = await fetch(url);
-            const items = await response.json();
+            let items = await response.json();
             
             listEl.innerHTML = ""; // Bersihkan daftar sebelumnya
             
@@ -42,6 +45,14 @@
             }
 
             if (Array.isArray(items)) {
+                // Saring item agar file konfigurasi sistem tidak ikut ditampilkan
+                items = items.filter(item => {
+                    if (item.type === 'file' && ignoredFiles.includes(item.name)) {
+                        return false;
+                    }
+                    return true;
+                });
+
                 items.forEach(item => {
                     const li = document.createElement("li");
                     if (item.type === "dir") {
