@@ -1,27 +1,18 @@
 public class Menu {
-    private String nama;
-    private double harga;
-    private Srting kategori;
+    // Atribut
+    String nama;
+    double harga;
+    String kategori; // "makanan" atau "minuman"
 
-    public Menu (String nama, double harga, String kategori) {
+    // Konstruktor
+    public Menu(String nama, double harga, String kategori) {
         this.nama = nama;
         this.harga = harga;
         this.kategori = kategori;
     }
 
-    public String getNama() {
-        return nama;
-    }
-    
-    public double getHarga() {
-        return harga;
-    }
-
-    public String getKategori() {
-        return kategori;
-    }
-
-    public void setHarga (double harga) {
-        this.harga = harga;
+    // Method untuk menampilkan info menu
+    public void tampilkanInfo() {
+        System.out.println("- " + nama + " (Rp " + harga + ")");
     }
 }
