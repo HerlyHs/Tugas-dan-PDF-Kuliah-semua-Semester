@@ -1,19 +1,66 @@
 <!DOCTYPE html>
 <html lang="id">
-<link>
+<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Arsip Tugas & PDF Kuliah</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Arsip Tugas & Modul Kuliah</h1>
-  <p>Selamat datang di repositori perkuliahan.</p>
-  <ul>
-    <!-- Tambahkan tautan ke file/folder tugas Anda di sini -->
-    <li><a href="./Semester%201/">Semester 1</a></li>
-    <li><a href="./Semester%202/">Semester 2</a></li>
-    <li><a href="./Semester%203/">Semester 3</a></li>
-  </ul>
+  <div class="container">
+    <h1>Arsip Tugas & Modul Kuliah</h1>
+    <p>Selamat datang di repositori perkuliahan.</p>
+    <ul id="folder-list">
+      <!-- Daftar folder dan file akan dimuat secara dinamis di sini -->
+    </ul>
+  </div>
+
+  <script>
+    const owner = "HerlyHs";
+    const repo = "Tugas-dan-PDF-Kuliah-semua-Semester";
+    
+    async function loadRepoContents(path = "") {
+        const url = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
+        const listEl = document.getElementById("folder-list");
+        
+        try {
+            listEl.innerHTML = "<li><a href='#'><span>⏳ Memuat data...</span></a></li>";
+            const response = await fetch(url);
+            const items = await response.json();
+            
+            listEl.innerHTML = ""; // Bersihkan daftar sebelumnya
+            
+            // Jika berada di dalam subfolder, tambahkan tombol kembali
+            if (path !== "") {
+                const pathArray = path.split('/');
+                pathArray.pop();
+                const parentPath = pathArray.join('/');
+                
+                const backLi = document.createElement("li");
+                backLi.innerHTML = `<a href="#" onclick="loadRepoContents('${parentPath}')"><span>📁 .. (Kembali)</span></a>`;
+                listEl.appendChild(backLi);
+            }
+
+            if (Array.isArray(items)) {
+                items.forEach(item => {
+                    const li = document.createElement("li");
+                    if (item.type === "dir") {
+                        // Jika berupa folder, klik untuk masuk ke subfolder
+                        li.innerHTML = `<a href="#" onclick="loadRepoContents('${item.path}')"><span>📁 ${item.name}</span></a>`;
+                    } else {
+                        // Jika berupa file (PDF/tugas), buka di tab baru
+                        li.innerHTML = `<a href="${item.html_url}" target="_blank"><span>📄 ${item.name}</span></a>`;
+                    }
+                    listEl.appendChild(li);
+                });
+            }
+        } catch (error) {
+            listEl.innerHTML = "<li><a href='#'><span>❌ Gagal memuat data repositori.</span></a></li>";
+        }
+    }
+
+    // Jalankan fungsi saat halaman pertama kali dibuka
+    loadRepoContents();
+  </script>
 </body>
 </html>
